@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Canvas Resize</title>
     <style>
-        canvas {
-            border: 1px solid black;
-            background: #D7D9A7;
-        }
-        body {
-            margin: 0;
-        }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      p {
+        color: #333;
+        position: absolute;
+        top: 0px;
+        left: 20px;
+        font-family: "Open Sans", sans-serif;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <canvas></canvas>
-    <script src="canvas.js"></script>
-</body>
+    <p>Click to Restart Simulation</p>
+    <script src="canvas-gravity.js"></script>
+  </body>
 </html>
