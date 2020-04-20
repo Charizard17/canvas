@@ -1,26 +1,22 @@
-var canvas = document.querySelector('canvas');
-var c = canvas.getContext('2d');
+const canvas = document.querySelector('canvas');
+const c = canvas.getContext('2d');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 
 // Variables
-var mouse = {
+let mouse = {
 	x: innerWidth / 2,
 	y: innerHeight / 2 
 };
 
-var colors = [
+const colors = [
 	'#2185C5',
 	'#7ECEFD',
 	'#FFF6E5',
 	'#FF7F66'
 ];
-
-var gravity = 0.2;
-var friction = 0.98;
-
 
 // Event Listeners
 addEventListener("mousemove", function(event) {
@@ -34,11 +30,6 @@ addEventListener("resize", function() {
   init();
 });
 
-addEventListener("click", function(event) {
-	init();
-});
-
-
 // Utility Functions
 function randomIntFromRange(min,max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
@@ -48,31 +39,22 @@ function randomColor(colors) {
 	return colors[Math.floor(Math.random() * colors.length)];
 }
 
+function getDistance(x1, y1, x2, y2) {
+	let xDistance = x2 - x1;
+	let yDistance = y2 - y1;
+
+	return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+}
 
 // Objects
-function Ball(x, y, dx, dy, radius, color) {
+function Circle(x, y, radius, color) {
 	this.x = x;
 	this.y = y;
-	this.dx = dx;
-	this.dy = dy;
 	this.radius = radius;
 	this.color = color;
 
 	this.update = function() {
-		if (this.y + this.radius + this.dy> canvas.height) {
-			this.dy = -this.dy;
-			this.dy = this.dy * friction;
-			this.dx = this.dx * friction;
-		} else {
-			this.dy += gravity;
-		}
-
-		if (this.x + this.radius >= canvas.width || this.x - this.radius <= 0) {
-			this.dx = -this.dx * friction;
-		}
-
-		this.x += this.dx;
-		this.y += this.dy;
+		
 		this.draw();
 	};
 
@@ -86,21 +68,12 @@ function Ball(x, y, dx, dy, radius, color) {
 	};
 }
 
-
 // Implementation
-var ballArray = [];
-
+let circle1;
+let circle2;
 function init() {
-	ballArray = [];
-
-	for (let i = 0; i < 600; i++) {
-		var radius = randomIntFromRange(8, 20);
-		var x = randomIntFromRange(radius, canvas.width - radius);
-		var y = randomIntFromRange(0, canvas.height - radius);
-		var dx = randomIntFromRange(-3, 3)
-		var dy = randomIntFromRange(-2, 2)
-	    ballArray.push(new Ball(x, y, dx, dy, radius, randomColor(colors)));
-	}
+	circle1 = new Circle(300, 300, 100, 'black');
+	circle2 = new Circle(undefined, undefined, 30, 'red');
 }
 
 // Animation Loop
@@ -109,9 +82,20 @@ function animate() {
 
 	c.clearRect(0, 0, canvas.width, canvas.height);
 
-	for (let i = 0; i < ballArray.length; i++) {
-		ballArray[i].update();
+	circle1.update();
+	circle2.x = mouse.x;
+	circle2.y = mouse.y;
+	circle2.update();
+
+	if (getDistance(circle1.x, circle1.y, circle2.x, circle2.y) < circle1.radius + circle2.radius) {
+		circle1.color = 'red';
+		circle2.color = 'blue';
+	} else {
+		circle1.color = 'blue';
+		circle2.color = 'red';
 	}
+
+	console.log(getDistance(circle1.x, circle1.y, circle2.x, circle2.y));
 }
 
 init();
